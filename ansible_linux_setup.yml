@@ -1,0 +1,56 @@
+- hosts: localhost
+  vars:
+    rpmfusion_link: "https://download1.rpmfusion.org"
+    fedora_version: "32"
+  become: true
+
+  tasks:
+  - debug:
+      msg:
+      - "Fedora version: {{ fedora_version }}, distribution: {{ ansible_distribution }}"
+  
+  - name: Enable RPMFusion
+    dnf:
+      name:
+        - '{{ rpmfusion_link }}/free/fedora/rpmfusion-free-release-{{ fedora_version }}.noarch.rpm' 
+        - '{{ rpmfusion_link }}/nonfree/fedora/rpmfusion-nonfree-release-{{ fedora_version }}.noarch.rpm'
+      state: present
+    when: ansible_distribution == "Fedora"
+    when: '"Fedora" in ansible_distribution'
+  
+  - name: Update Fedora
+    dnf:
+      name: "*"
+      state: latest
+    when: '"Fedora" in ansible_distribution'
+
+  - name: Update Debian
+    apt:
+      update_cache: yes
+      cache_valid_time: 7200
+      name: "*"
+      state: latest
+    when: '"Debian" in ansible_distribution or "Kali" in ansible_distribution'
+
+  - name: Install packages
+    package:
+      name:
+        - ssh
+        - vim
+        - git
+        - zsh
+        - gcc
+        - g++
+        - tor
+        - htop
+        - gimp
+        - python3
+        - ipython3
+        - nautilus
+        - mitmproxy
+        - keepassxc
+        - terminator
+        - firefox-esr
+        - python3-pip
+        - papirus-icon-theme
+      state: latest
