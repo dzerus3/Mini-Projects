@@ -42,6 +42,8 @@
         - gcc
         - g++
         - tor
+        - fzf
+        - curl
         - htop
         - gimp
         - python3
