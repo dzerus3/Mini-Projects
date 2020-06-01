@@ -117,4 +117,4 @@ alias aptupg="sudo apt -y update && sudo apt -y upgrade"
 alias aptinst="sudo apt -y install"
 alias findproc="ps aux | grep -i"
 
-fortune -a | lolcat
+fortune /usr/share/games/fortunes /usr/share/games/fortunes/off /usr/share/games/fortunes/es /usr/share/games/fortunes/ru | lolcat
