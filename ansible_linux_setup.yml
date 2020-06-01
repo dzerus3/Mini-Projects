@@ -2,12 +2,13 @@
   vars:
     rpmfusion_link: "https://download1.rpmfusion.org"
     fedora_version: "32"
+    username: "sal"
   become: true
 
   tasks:
   - debug:
       msg:
-      - "Fedora version: {{ fedora_version }}, distribution: {{ ansible_distribution }}"
+      - "Using distribution: {{ ansible_distribution }}"
   
   - name: Enable RPMFusion
     dnf:
@@ -46,6 +47,7 @@
         - curl
         - htop
         - gimp
+        - gedit
         - python3
         - ipython3
         - nautilus
@@ -56,3 +58,31 @@
         - python3-pip
         - papirus-icon-theme
       state: latest
+      
+  - name: Enable SSH daemon in systemd
+    systemd:
+      name: sshd
+      enabled: yes
+
+  - name: Set zsh as default shell
+    shell: "chsh --shell /usr/bin/zsh {{ username }}"
+
+  - name: Download oh-my-zsh
+    get_url:
+      url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+      dest: oh-my-zsh-install.sh
+
+  - name: Install oh-my-zsh
+    shell: oh-my-zsh-install.sh >> oh-my-zsh.log
+
+  # Example clone a repo with separate git directory
+  - name: Clone my mini-projects repository
+    git:
+      repo: https://github.com/dzerus3/Mini-Projects.git
+      dest: ~/workspace/Mini-Projects
+      clone: yes
+
+  - name: Copy files from foo to bar
+    copy: 
+      src:  ~/workspace/Mini-Projects/.zshrc
+      dest: ~/.zshrc
