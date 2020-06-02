@@ -150,6 +150,6 @@
       channel: xsettings
       property: "/Net/ThemeName"
       value_type: string
-      value: "Adwaita-Dark"
+      value: "Adwaita-dark"
     become: true
     become_user: "{{ username }}"
