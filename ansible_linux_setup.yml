@@ -13,8 +13,8 @@
   - name: Enable RPMFusion
     dnf:
       name:
-        - '{{ rpmfusion_link }}/free/fedora/rpmfusion-free-release-{{ fedora_version }}.noarch.rpm' 
-        - '{{ rpmfusion_link }}/nonfree/fedora/rpmfusion-nonfree-release-{{ fedora_version }}.noarch.rpm'
+        - "{{ rpmfusion_link }}/free/fedora/rpmfusion-free-release-{{ fedora_version }}.noarch.rpm"
+        - "{{ rpmfusion_link }}/nonfree/fedora/rpmfusion-nonfree-release-{{ fedora_version }}.noarch.rpm"
       state: present
     when: ansible_distribution == "Fedora"
     when: '"Fedora" in ansible_distribution'
@@ -69,7 +69,7 @@
 
   - name: Download oh-my-zsh
     get_url:
-      url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+      url: "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
       dest: oh-my-zsh-install.sh
 
   - name: Install oh-my-zsh
@@ -78,11 +78,56 @@
   # Example clone a repo with separate git directory
   - name: Clone my mini-projects repository
     git:
-      repo: https://github.com/dzerus3/Mini-Projects.git
-      dest: ~/workspace/Mini-Projects
+      repo: "https://github.com/dzerus3/Mini-Projects.git"
+      dest: "~/workspace/Mini-Projects"
       clone: yes
 
   - name: Copy files from foo to bar
     copy: 
-      src:  ~/workspace/Mini-Projects/.zshrc
-      dest: ~/.zshrc
+      src:  "~/workspace/Mini-Projects/.zshrc"
+      dest: "~/.zshrc"
+
+  - name: Download wallpaper
+    get_url: "https://www.desktopbackground.org/download/1920x1080/2010/04/10/29_ultra-hd-4k-rain-wallpapers-hd-desktop-backgrounds-3840x2400_3840x2400_h.jpg"
+    dest: "~/Pictures/wallpaper.jpg"
+
+  - name: Set XFCE to use wallpaper
+    xfconf:
+      channel: xfce4-desktop
+      property: "/backdrop/screen0/monitor0/image-path"
+      value_type: string
+      value: "~/Pictures/wallpaper.jpg"
+    become: true
+    become_user: sal
+
+  - name: Create a .themes folder
+    file: 
+      path: "~/.themes" 
+      state: directory
+
+  - name: Download xfwm theme
+    git:
+      repo: "https://github.com/fakedeltatime/flat-two-color.git"
+      dest: "~/.themes"
+      clone: yes
+
+  - name: Set xfwm theme
+    xfconf:
+      channel: xfwm4
+      property: "/general/theme"
+      value_type: string
+      value: "flat-two-color"
+  
+  - name: Set icon theme
+    xfconf:
+      channel: xsettings
+      property: "/Net/IconThemeName"
+      value_type: string
+      value: "ePapirus"
+
+  - name: Set theme to Adwaita Dark
+    xfconf:
+      channel: xsettings
+      property: "/Net/ThemeName"
+      value_type: string
+      value: "Adwaita-Dark"
