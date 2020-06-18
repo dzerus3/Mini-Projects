@@ -44,6 +44,7 @@
         - g++
         - tor
         - fzf
+        - vlc
         - curl
         - htop
         - gimp
@@ -51,11 +52,15 @@
         - python3
         - ipython3
         - nautilus
+        - shotwell
+        - bleachbit
         - mitmproxy
         - keepassxc
         - terminator
+        - file-roller
         - firefox-esr
         - python3-pip
+        - gnome-calculator
         - papirus-icon-theme
       state: latest
       
@@ -89,10 +94,17 @@
     become: true
     become_user: "{{ username }}"
 
-  - name: Copy files from foo to bar
+  - name: Copy zshrc to home dir
     copy: 
-      src:  "~/workspace/Mini-Projects/.zshrc"
+      src:  "./.zshrc"
       dest: "~/.zshrc"
+    become: true
+    become_user: "{{ username }}"
+  
+  - name: Copy vimrc to home dir
+    copy: 
+      src:  "./.vimrc"
+      dest: "~/.vimrc"
     become: true
     become_user: "{{ username }}"
 
@@ -153,3 +165,20 @@
       value: "Adwaita-dark"
     become: true
     become_user: "{{ username }}"
+
+  - name: Download pathogen
+    shell: "mkdir -p ~/.vim/autoload ~/.vim/bundle && curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim"
+
+    # You can use shell to run other executables to perform actions inline
+  - name: Run expect to wait for a successful PXE boot via out-of-band CIMC
+    shell: |
+      cd ~/.vim/bundle
+      git clone https://github.com/dense-analysis/ale.git
+      git clone https://github.com/terryma/vim-multiple-cursors
+      git clone https://github.com/tpope/vim-commentary.git
+      git clone https://github.com/tpope/vim-fugitive.git
+      git clone https://github.com/ctrlpvim/ctrlp.vim.git
+      git clone git://github.com/nathanaelkane/vim-indent-guides.git
+      git clone https://github.com/vim-scripts/AutoComplPop.git
+      git clone https://github.com/ervandew/supertab.git
+
