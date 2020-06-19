@@ -1,5 +1,5 @@
 #!/bin/bash
- 
+
 #############################################
 # The MPC track recorder                    #
 # Starts a small web server on port 10,000  #
@@ -8,17 +8,19 @@
 # ~/tracklist file. Then, it will start a   #
 # loop to record these tracks.              #
 #############################################
- 
+
+#!/bin/bash
+
 trackrecorder(){
-        while :
-        do
-                TIMESTAMP=$(date +"%m/%e %H:%M:%S")
-                TRACK=$(mpc current --wait)
-                echo "$TIMESTAMP: $TRACK">>~/trackhistory
-                sleep 10 # This is in case mpd dies
-        done
+	while :
+	do
+		TIMESTAMP=$(date +"%m/%e %H:%M:%S")
+		TRACK=$(mpc current --wait)
+		echo "$TIMESTAMP: $TRACK">>/home/sal/trackhistory
+		sleep 10 # This is in case mpd dies
+	done
 }
 
-nc -lk -p 10000 --sh-exec "echo -e 'HTTP/1.1 200 OK\r\n'; tail ~/trackhistory; echo '--------------------------------------'; mpc" &
+nc -lk -p 10000 --sh-exec "echo -e 'HTTP/1.1 200 OK\r\n'; tail /home/sal/trackhistory; echo '--------------------------------------'; mpc; echo '--------------------------------------'; mpc stats; mpc queued" &
 
-trackrecorder &
+nc -lk -p 10001 --sh-exec "/usr/bin/mpc next" &
