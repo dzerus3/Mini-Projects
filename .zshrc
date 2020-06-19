@@ -68,7 +68,8 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-navigation-tools web-search colored-man-pages zsh-interactive-cd zsh-autosuggestions)
+plugins=(git zsh-navigation-tools web-search colored-man-pages 
+         zsh-interactive-cd zsh-autosuggestions sudo taskwarrior)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -78,7 +79,8 @@ zle -N znt-kill-widget
 bindkey "^X" znt-kill-widget
 
 znt_cd_hotlist=( "~" "~/workspace" "~/.vim_runtime" 
-                 "~/Downloads" "~/sftp" )
+                 "~/Downloads" "~/sftp" "~/workspace/Schism"
+                 "~/Documents" "~/Pictures" )
 
 # User configuration
 
@@ -112,9 +114,13 @@ alias l="ls"
 alias ll="ls -l"
 alias la="ls -a"
 alias lla="ls -la"
+alias c="xclip"
+alias v="xclip -o"
+alias CAPSOFF="xdotool key Caps_Lock"
 alias aptsrch="apt search"
-alias aptupg="sudo apt -y update && sudo apt -y upgrade"
+alias aptupd="sudo apt -y update && sudo apt -y upgrade"
 alias aptinst="sudo apt -y install"
 alias findproc="ps aux | grep -i"
+alias find-files-with="find . -type f -print | xargs grep"
 
-fortune /usr/share/games/fortunes /usr/share/games/fortunes/off /usr/share/games/fortunes/es /usr/share/games/fortunes/ru | lolcat
+fortune /usr/share/games/fortunes /usr/share/games/fortunes/off /usr/share/games/fortunes/ru | lolcat
