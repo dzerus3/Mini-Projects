@@ -174,11 +174,12 @@
     shell: |
       cd ~/.vim/bundle
       git clone https://github.com/dense-analysis/ale.git
-      git clone https://github.com/terryma/vim-multiple-cursors
-      git clone https://github.com/tpope/vim-commentary.git
-      git clone https://github.com/tpope/vim-fugitive.git
       git clone https://github.com/ctrlpvim/ctrlp.vim.git
+      git clone https://github.com/majutsushi/tagbar.git
+      git clone https://github.com/Townk/vim-autoclose.git
+      git clone https://github.com/tpope/vim-commentary.git
+      git clone https://github.com/tpope/vim-dispatch.git
+      git clone https://github.com/tpope/vim-fugitive.git
       git clone git://github.com/nathanaelkane/vim-indent-guides.git
-      git clone https://github.com/vim-scripts/AutoComplPop.git
-      git clone https://github.com/ervandew/supertab.git
-
+      git clone https://github.com/tpope/vim-surround.git
+      git clone https://github.com/ajh17/vimcompletesme.git

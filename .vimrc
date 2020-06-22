@@ -39,6 +39,9 @@ endif
 " Fast saving
 nmap <leader>w :w!<cr>
 
+" Run make and save output
+" nmap <C-S> :make | copen<CR>
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -57,8 +60,7 @@ set wildmenu
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc
 if has("win16") || has("win32")
-    set wildignore+=.git\*,.hg\*,.svn\*
-else
+    set wildignore+=.git\*,.hg\*,.svn\* else
     set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 endif
 
@@ -73,7 +75,6 @@ set hid
 
 " Configure backspace so it acts as it should act
 set backspace=eol,start,indent
-set whichwrap+=<,>,h,l
 
 " Ignore case when searching
 set ignorecase
@@ -104,12 +105,6 @@ set novisualbell
 set t_vb=
 set tm=500
 
-" Properly disable sound on errors on MacVim
-if has("gui_macvim")
-    autocmd GUIEnter * set vb t_vb=
-endif
-
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -134,10 +129,9 @@ set tabstop=4
 set lbr
 set tw=500
 
-set ai "Auto indent
-set si "Smart indent
-set wrap "Wrap lines
-
+set ai "Auto indent"
+set si "Smart indent"
+set wrap "Wrap lines"
 
 """"""""""""""""""""""""""""""
 " => Visual mode related
@@ -145,7 +139,7 @@ set wrap "Wrap lines
 " Visual mode pressing * or # searches for the current selection
 " Super useful! From an idea by Michael Naumann
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
-vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
+vnoremap <silent> z :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 
 """"""""""""""""""""""""""""""
 " => Status line
@@ -153,8 +147,19 @@ vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 " Always show the status line
 set laststatus=2
 
+function! WindowNumber()
+    let str=tabpagewinnr(tabpagenr())
+    return str
+endfunction
+
 " Format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ Win:%{WindowNumber()}\ \ \ Line:\ %l\ \ Column:\ %c
+
+let i = 1
+while i <= 9
+    execute 'nnoremap <Leader>' . i . ' :' . i . 'wincmd w<CR>'
+    let i = i + 1
+endwhile
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
@@ -179,25 +184,6 @@ endfun
 if has("autocmd")
     autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
 endif
-
-" Set font according to system
-if has("mac") || has("macunix")
-    set gfn=IBM\ Plex\ Mono:h14,Hack:h14,Source\ Code\ Pro:h15,Menlo:h15
-elseif has("win16") || has("win32")
-    set gfn=IBM\ Plex\ Mono:h14,Source\ Code\ Pro:h12,Bitstream\ Vera\ Sans\ Mono:h11
-elseif has("gui_gtk2")
-    set gfn=IBM\ Plex\ Mono\ 14,:Hack\ 14,Source\ Code\ Pro\ 12,Bitstream\ Vera\ Sans\ Mono\ 11
-elseif has("linux")
-    set gfn=IBM\ Plex\ Mono\ 14,:Hack\ 14,Source\ Code\ Pro\ 12,Bitstream\ Vera\ Sans\ Mono\ 11
-elseif has("unix")
-    set gfn=Monospace\ 11
-endif
-
-" Disable scrollbars (real hackers don't use scrollbars for navigation!)
-set guioptions-=r
-set guioptions-=R
-set guioptions-=l
-set guioptions-=L
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Turn persistent undo on 
@@ -266,16 +252,17 @@ set guioptions-=L
 set background=dark
 colorscheme torte
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Nerd Tree
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:NERDTreeWinPos = "right"
-let NERDTreeShowHidden=0
-let NERDTreeIgnore = ['\.pyc$', '__pycache__']
-let g:NERDTreeWinSize=35
-map <leader>nn :NERDTreeToggle<cr>
-map <leader>nb :NERDTreeFromBookmark<Space>
-map <leader>nf :NERDTreeFind<cr>
+let g:indent_guides_enable_on_vim_startup = 1
+
+" Tagbar options
+nmap <C-X> :TagbarToggle<CR>
+cnoreabbrev Z TagbarTogglePause
+
+" Easy window switching
+nmap <silent> <A-Up> :wincmd k<CR>
+nmap <silent> <A-Down> :wincmd j<CR>
+nmap <silent> <A-Left> :wincmd h<CR>
+nmap <silent> <A-Right> :wincmd l<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Ale (syntax checker and linter)
@@ -297,6 +284,8 @@ let g:ale_lint_on_enter = 0
 
 let g:ale_cpp_clang_options = '-std=c++17 -Wall'
 let g:ale_cpp_gcc_options = '-std=c++17 -Wall'
+
+let g:clang_library_path='/usr/lib/llvm-9/lib/'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => vim-multiple-cursors
@@ -371,4 +360,21 @@ function ToggleHex()
   let &mod=l:modified
   let &readonly=l:oldreadonly
   let &modifiable=l:oldmodifiable
+endfunction
+
+function! VisualSelection(direction, extra_filter) range
+    let l:saved_reg = @"
+    execute "normal! vgvy"
+
+    let l:pattern = escape(@", "\\/.*'$^~[]")
+    let l:pattern = substitute(l:pattern, "\n$", "", "")
+
+    if a:direction == 'gv'
+        call CmdLine("Ack '" . l:pattern . "' " )
+    elseif a:direction == 'replace'
+        call CmdLine("%s" . '/'. l:pattern . '/')
+    endif
+
+    let @/ = l:pattern
+    let @" = l:saved_reg
 endfunction
