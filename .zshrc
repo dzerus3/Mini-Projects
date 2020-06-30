@@ -114,8 +114,12 @@ alias l="ls"
 alias ll="ls -l"
 alias la="ls -a"
 alias lla="ls -la"
-alias c="xclip"
-alias v="xclip -o"
+alias copy="xclip"
+alias paste="xclip -o"
+alias find-duplicate-files="find -not -empty -type f -printf "%s\n" | sort -rn | uniq -d | xargs -I{} -n1 find -type f -size {}c -print0 | xargs -0 md5sum | sort | uniq -w32 --all-repeated=separate"
+alias common-commands="history | awk '{a[$2]++}END{for(i in a){print a[i] " " i}}' | sort -rn | head"
+alias heavy-procs="ps aux | sort -nk +4 | tail"
+alias host-file="ncat -v -l 8080 <"
 alias mingw="/usr/bin/x86_64-w64-mingw32-g++-win32"
 alias CAPSOFF="xdotool key Caps_Lock"
 alias aptsrch="apt search"
@@ -123,6 +127,39 @@ alias aptupd="sudo apt -y update && sudo apt -y upgrade"
 alias aptinst="sudo apt -y install"
 alias findproc="ps aux | grep -i"
 alias find-files-with="find . -type f -print | xargs grep"
+
+# Things I want to find a use for:
+# Outputting audio:
+#   dd if=/dev/dsp | ssh -c arcfour -C username@host dd of=/dev/dsp
+# In-console clock
+#   while sleep 1;do tput sc;tput cup 0 $(($(tput cols)-29));date;tput rc;done &
+# Delete all files except those matching wildcard
+#   rm !(*.ogg|*.wav|*.mp3)
+# Real time internet activity
+#   lsof -i
+# Remove duplicate entries in a file
+#   awk '!x[$0]++' <file>
+# Find duplicate files
+#   find -not -empty -type f -printf "%s\n" | sort -rn | uniq -d | xargs -I{} -n1 find -type f -size {}c -print0 | xargs -0 md5sum | sort | uniq -w32 --all-repeated=separate
+# Extract tar without saving locally
+#   wget -qO - "http://www.tarball.com/tarball.gz" | tar zxvf -
+# Graphical subdirectory tree, without an install
+#   ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'
+
+# rm-except() { TODO
+#     local FILES="${1}"
+
+#     for FILE in $@
+#     do
+# 	    FILES+="|${FILE}"
+#     done
+#     echo "$FILES"
+#     rm -f !($FILES)
+# }
+
+mkcd() {
+    mkdir $1 && cd $_
+}
 
 rawurlencode() {
   local string="${@}"

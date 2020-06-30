@@ -46,6 +46,8 @@
         - fzf
         - vlc
         - curl
+        - ncat
+        - tree
         - htop
         - gimp
         - gedit
