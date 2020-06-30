@@ -68,7 +68,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-navigation-tools web-search colored-man-pages 
+plugins=(git zsh-navigation-tools colored-man-pages 
          zsh-interactive-cd zsh-autosuggestions sudo taskwarrior)
 
 source $ZSH/oh-my-zsh.sh
@@ -116,11 +116,39 @@ alias la="ls -a"
 alias lla="ls -la"
 alias c="xclip"
 alias v="xclip -o"
+alias mingw="/usr/bin/x86_64-w64-mingw32-g++-win32"
 alias CAPSOFF="xdotool key Caps_Lock"
 alias aptsrch="apt search"
 alias aptupd="sudo apt -y update && sudo apt -y upgrade"
 alias aptinst="sudo apt -y install"
 alias findproc="ps aux | grep -i"
 alias find-files-with="find . -type f -print | xargs grep"
+
+rawurlencode() {
+  local string="${@}"
+  local strlen=${#string}
+  local encoded=""
+  local pos c o
+
+  for (( pos=0 ; pos<strlen ; pos++ )); do
+     c=${string:$pos:1}
+     case "$c" in
+        [-_.~a-zA-Z0-9] ) o="${c}" ;;
+        * )               printf -v o '%%%02x' "'$c"
+     esac
+     encoded+="${o}"
+  done
+  echo "${encoded}"    # You can either set a return variable (FASTER) 
+  REPLY="${encoded}"   #+or echo the result (EASIER)... or both... :p
+}
+
+ddg() { 
+    local string=$(rawurlencode $@)
+    links2 "https://duckduckgo.com/html?q=$string"
+}
+
+isitup() { 
+    curl -s "https://isitup.org/$1" | grep "<title>" | cut -c 8- | rev | cut -c 9- | rev 
+}
 
 fortune /usr/share/games/fortunes /usr/share/games/fortunes/off /usr/share/games/fortunes/ru | lolcat
