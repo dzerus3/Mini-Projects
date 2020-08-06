@@ -116,14 +116,14 @@ syntax enable
 " => Text, tab and indent related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use spaces instead of tabs
-set expandtab
+" set expandtab
 
 " Be smart when using tabs ;)
 set smarttab
 
 " 1 tab == 4 spaces
-set shiftwidth=4
-set tabstop=4
+set shiftwidth=2
+set tabstop=2
 
 " Linebreak on 500 characters
 set lbr
@@ -157,7 +157,7 @@ set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ Win:%{WindowNumber()}\ \ \ Line:\ 
 
 let i = 1
 while i <= 9
-    execute 'nnoremap <Leader>' . i . ' :' . i . 'wincmd w<CR>'
+    execute 'nnoremap <leader>' . i . ' :' . i . 'wincmd w<CR>'
     let i = i + 1
 endwhile
 
@@ -166,7 +166,26 @@ endwhile
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Remap VIM 0 to first non-blank character
 map 0 ^
-" Move a line of text using ALT+[jk] or Command+[jk] on mac
+
+
+" Better tab management
+map <C-Left> <Esc>:tabprev<CR>
+map <C-Right> <Esc>:tabnext<CR>
+map <C-n> <Esc>:tabnew<CR>
+
+" Ctrl-A/E for beginning/end of line
+map <C-A> ^
+nnoremap <silent> <C-E> $
+vnoremap <silent> <C-E> $
+
+" Ctrl-D to delete line without copying it
+nnoremap <silent> <C-D> "_dd
+vnoremap <silent> <C-D> "_dd
+
+" Creating newline without insert mode
+nmap <S-Enter> O<Esc>
+nmap <CR> o<Esc>
+
 nmap <M-j> mz:m+<cr>`z
 nmap <M-k> mz:m-2<cr>`z
 vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
@@ -252,11 +271,18 @@ set guioptions-=L
 set background=dark
 colorscheme torte
 
+set ts=4 sw=4 et
+let g:indent_guides_start_level=2
+let g:indent_guides_size = 1
+
 let g:indent_guides_enable_on_vim_startup = 1
 
 " Tagbar options
 nmap <C-X> :TagbarToggle<CR>
 cnoreabbrev Z TagbarTogglePause
+
+" Don't force me to capitalize make command
+cnoreabbrev m Make
 
 " Easy window switching
 nmap <silent> <A-Up> :wincmd k<CR>
