@@ -182,9 +182,12 @@ vnoremap <silent> <C-E> $
 nnoremap <silent> <C-D> "_dd
 vnoremap <silent> <C-D> "_dd
 
+" Ctrl-J makes everything past cursor new line
+nnoremap <C-J> a<CR><Esc>k$
+
 " Creating newline without insert mode
-nmap <S-Enter> O<Esc>
-nmap <CR> o<Esc>
+nnoremap o o<Esc>
+nnoremap O O<Esc>
 
 nmap <M-j> mz:m+<cr>`z
 nmap <M-k> mz:m-2<cr>`z
