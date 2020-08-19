@@ -1,3 +1,126 @@
+"" This is my vimrc. It changes *very* many things, but here is a reference to some of the best features
+
+""" This largely depends on having certain addons installed. 
+""" First install pathogen. This is really easy, just find a tutorial online.
+""" Then go into ~/.vim/bundle and git clone the following repositories:
+"" Ale
+" This lints code. I only use it for C/C++, but I think you can make it work with other languages as well.
+" https://github.com/dense-analysis/ale.git
+"
+"" CtrlP
+" This provides you with a fuzzy search menu to open new files from within vim. Bound to `Ctrl + f` because reaching for the p is too big an ordeal for me.
+" https://github.com/ctrlpvim/ctrlp.vim.git
+"
+"" Supertab
+" Binds autocomplete to `tab` and allows you to configure it.
+" https://github.com/ervandew/supertab.git
+"
+"" Tagbar
+" Gives you an overview of all C++ classes and functions in current file. Allows you to jump to them when selected in the window. Extremely useful when programming C++. It makes you install an extra program, directions will pop up in vim first time you start with it.
+" https://github.com/majutsushi/tagbar
+"
+"" Autoclose
+" Intelligently autocloses parentheses, brackets, quotes, etc.
+" https://github.com/Townk/vim-autoclose.git
+"
+"" Commentary
+" Allows you to quickly comment stuff out. I just use it for its `gc` command.
+" https://github.com/tpope/vim-commentary.git
+"
+"" Dispatch
+" Allows you to run make in a vim window. Extremely convenient.
+" https://github.com/tpope/vim-dispatch.git
+"
+"" Fugitive
+" Allows you to run Git commands in vim. Just type :Git and append with proper command line args.
+" https://github.com/tpope/vim-fugitive.git
+"
+"" Surround
+" Allows you to efficiently surround things with quotes, HTML tags, parentheses, etc. I never use it, but I guess it's nice to have if you ever get around to using it.
+" https://github.com/tpope/vim-surround.git
+"
+"" WindowSwap
+" Makes it really easy to move window layout around.
+" https://github.com/wesQ3/vim-windowswap.git
+
+"" Here are useful things you should always know about vim
+" `i` goes into edit mode.
+" `gi` starts edit mode on whichever spot you last entered it.
+" `a` goes into edit mode, but moves your cursor forward by one character.
+" `A` goes into edit mode, but moves your cursor to the end of the line.
+" `new` splits window horizontally. `vert new` spreads it vertically.
+" `m + any letter` saves that position. ' + same key returns to it.
+" `gg` goes to beginning of first line. `G` goes to beginning of last line.
+" `number + gg or G` goes to the line number.
+" `w` goes to the next word. `b` goes to the previous word.
+" `q + any letter` records whichever keys you type. Press `q` to stop recording, and `@ + letter` to repeat the keys.
+" Vim regularly backs up whichever file you're working on, and it will prompt you whether to restore it upon crashing.
+" `/` starts search mode. `n` goes to the next match. `Shift + n` goes to previous match.
+" `:g` is like `/`, but instead of going to next match it just outputs a scrollable list of all matches.
+" `/` and `:g` support regex.
+" `:%s/text/othertext/` finds and replaces all occurences of text with othertext on current line.
+" `:%s/text/othertext/g` finds and replaces all occurences of text with othertext.
+" `:%s/text/othertext/gc` to make it prompt you before replacement.
+" `:set number` enables line numbers. `:set nonumber` disables them.
+" `H` goes to top of screen. `M` goes to middle of screen. `L` goes to bottom of screen.
+" `:e` reloads file if it was changed externally.
+" `number + direction key` move in direction by number rows/columns.
+
+"" Visual mode
+" `v` goes into visual mode. This selects text.
+" `Shift + v` selects entire lines.
+" `Ctrl + v` selects block of text.
+" `y` in visual mode copies text. `d` deletes it and copies it. `p` pastes it in.
+
+"" Here are existing things this just enables
+" Syntax highlighting is on.
+" Line numbers are enabled.
+" `y`anking in one vim window now carries over to other windows.
+" On exit, vim saves where you were in the file and comes back there when you open it again.
+" Vim now scrolls down as long as you are within 7 rows of the bottom of the screen.
+" Tab length is set to 4.
+" You can undo things even after closing file. I think anyway.
+
+"" Here are useful things related to deleting text
+"" Keep in mind that most things using the `d` key copy what you deleted. See next section to see my fix for this.
+" `w` and `b` can be prepended by `d` to delete this or previous word. Make sure to read more about this.
+" `D` deletes everything from cursor until the end of the line.
+" `x` deletes letter under cursor. `X` deletes the previous letter.
+" `r + character` replaces whichever character your cursor is over with whichever character you type.
+" `R` stars replace mode.
+
+"" Here are things that were added within the vimrc.
+" Leader key is bound to `,`.
+" `:W` now goes into sudo and saves your file. Good if you edit /etc but forget to prepend sudo to the command.
+" `Ctrl + d` deletes entire line without copying it.
+" `Ctrl + d` in visual mode now deletes selection without copying.
+" `Ctrl + a` is an alias for `^` (goes to first non-whitespace character on line).
+" `Ctrl + e` is an alias for `$` (goes to last non-whitespace character on line).
+" `Ctrl + j` makes everything past cursor a new line.
+" I set `o` and `O` to do their thing, without going into edit mode.
+" `Ctrl + h` and `Ctrl + Backspace` toggles hexadecimal mode. It gives an error, but I think it is safe to ignore.
+" Custom status line.
+" `z` searches for selected text.
+
+"" Here are things related to tabs and windows. Very important to remember these.
+" `Ctrl + n` open a new tab.
+" `Ctrl + left/right arrow key` switches to the next tab in that direction.
+" `Alt + arrow key` moves your cursor to the window which is in that direction.
+" `Ctrl + w + number + < or >` increases or decreases window size by number characters.
+
+"" Here are things related to installed addons
+" Parentheses and brackets will intelligently autoclose.
+" `Ctrl + x` opens up an overview of all C++ functions and classes in current file.
+" `:Z` toggles preventing the overview from changing when you move to a different window.
+" `:Make` or `:m` calls make without exiting vim.
+" `:Git` allows you to run any commands of Git without exiting vim.
+" `Tab` while on an unfinished line of code attempts to do autocompletion. When the suggestions pop up, press `Tab` again to scroll through them and `Shift + Tab` to scroll backward.
+" `Ctrl + f` opens up a window which allows you to fuzzy search for files. 
+" `Ctrl + y` while in Ctrl + f mode creates the file with the name you typed in.
+" `gc` while selecting something comments out all selected lines. Works across just about all languages.
+" `,a` goes to the next ALE error.
+" `Leader ww` selects a window. Switching to another window and doing `Leader ww` again swaps the windows places
+
 " Starts pathogen
 execute pathogen#infect()
 
@@ -181,6 +304,7 @@ vnoremap <silent> <C-E> $
 " Ctrl-D to delete line without copying it
 nnoremap <silent> <C-D> "_dd
 vnoremap <silent> <C-D> "_dd
+vmap <silent> <C-D> "_d
 
 " Ctrl-J makes everything past cursor new line
 nnoremap <C-J> a<CR><Esc>k$
@@ -315,21 +439,6 @@ let g:ale_cpp_clang_options = '-std=c++17 -Wall'
 let g:ale_cpp_gcc_options = '-std=c++17 -Wall'
 
 let g:clang_library_path='/usr/lib/llvm-9/lib/'
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => vim-multiple-cursors
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:multi_cursor_use_default_mapping=0
-
-" Default mapping
-let g:multi_cursor_start_word_key      = '<C-s>'
-let g:multi_cursor_select_all_word_key = '<A-s>'
-let g:multi_cursor_start_key           = 'g<C-s>'
-let g:multi_cursor_select_all_key      = 'g<A-s>'
-let g:multi_cursor_next_key            = '<C-s>'
-let g:multi_cursor_prev_key            = '<C-p>'
-let g:multi_cursor_skip_key            = '<C-x>'
-let g:multi_cursor_quit_key            = '<Esc>'
 
 """"""""""""""""""""""""""""""
 " => CTRL-P
