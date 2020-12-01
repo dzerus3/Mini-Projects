@@ -1,7 +1,7 @@
 - hosts: localhost
   vars:
     rpmfusion_link: "https://download1.rpmfusion.org"
-    fedora_version: "32"
+    fedora_version: "33"
     username: "sal"
   become: true
 
@@ -87,14 +87,10 @@
     become: true
     become_user: "{{ username }}"
 
-  # Example clone a repo with separate git directory
-  - name: Clone my mini-projects repository
-    git:
-      repo: "https://github.com/dzerus3/Mini-Projects.git"
-      dest: "~/workspace/Mini-Projects"
-      clone: yes
-    become: true
-    become_user: "{{ username }}"
+  - name: Download vimrc
+    get_url:
+      url: https://raw.githubusercontent.com/dzerus3/vimrc/master/.vimrc
+      dest: "/home/{{ username }}/.vimrc"
 
   - name: Copy zshrc to home dir
     copy: 
@@ -172,7 +168,7 @@
     shell: "mkdir -p ~/.vim/autoload ~/.vim/bundle && curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim"
 
     # You can use shell to run other executables to perform actions inline
-  - name: Run expect to wait for a successful PXE boot via out-of-band CIMC
+  - name: Download vim plugins
     shell: |
       cd ~/.vim/bundle
       git clone https://github.com/dense-analysis/ale.git
